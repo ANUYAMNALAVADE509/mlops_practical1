@@ -1,0 +1,67 @@
+import pandas as pd
+import joblib
+import mlflow
+from sklearn.metrics import accuracy_score
+
+# ---------------------------------------
+# 1. Load the trained Random Forest model
+# ---------------------------------------
+model = joblib.load(r"C:\Users\nmims.student\Desktop\A-001-Mlops\Practical5\telecom_tower_model.pkl")
+print("Model loaded successfully!")
+
+# ---------------------------------------
+# 2. Load NEW production data
+# ---------------------------------------
+new_data = pd.read_excel(r"C:\Users\nmims.student\Desktop\A-001-Mlops\Practical5\new_tower_telemetry.xlsx")
+print("New production data loaded successfully!")
+
+# ---------------------------------------
+# 3. Select ML features
+# ---------------------------------------
+features = [
+    "Tower_ID", 
+    "Temperature_C",
+    "Battery_Voltage",
+    "Power_Consumption_W",
+    "Signal_Strength_Percent",
+    "Fan_Speed_RPM",
+    "Humidity_Percent",
+    "Traffic_Load",
+    "Tower_Age_Years"
+]
+X_new = new_data[features]
+y_new = new_data["Failure_Within_48Hrs"]
+
+# ---------------------------------------
+# 4. Make predictions
+# ---------------------------------------
+predictions = model.predict(X_new)
+
+# ---------------------------------------
+# 5. Calculate accuracy
+# ---------------------------------------
+accuracy = accuracy_score(y_new, predictions)
+print("-----------------------------------")
+print("MODEL DRIFT MONITORING")
+print("-----------------------------------")
+print("Production Accuracy:", round(accuracy, 2))
+
+# ---------------------------------------
+# 6. Start MLflow experiment
+# ---------------------------------------
+mlflow.set_experiment("Telecom_Tower_Model_Monitoring")
+with mlflow.start_run():
+    mlflow.log_param("model", "Random Forest")
+    mlflow.log_param("n_estimators", 100)
+    mlflow.log_metric("production_accuracy", accuracy)
+print("Results logged successfully to MLflow")
+
+# ---------------------------------------
+# 7. Drift / performance threshold
+# ---------------------------------------
+threshold = 0.80
+if accuracy < threshold:
+    print("\nWARNING: Model performance has degraded!")
+    print("Model retraining is recommended.")
+else:
+    print("\nModel performance is stable.")

@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/nmims.student/Desktop/A-001-Mlops/Practical5/mlruns/704655461205885342/22aa52c8880d4292931ee059ef024932/artifacts
+end_time: 1786338412680
+entry_point_name: ''
+experiment_id: '704655461205885342'
+lifecycle_stage: active
+run_id: 22aa52c8880d4292931ee059ef024932
+run_name: loud-elk-131
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1786338412603
+status: 3
+tags: []
+user_id: NMIMS.Student
