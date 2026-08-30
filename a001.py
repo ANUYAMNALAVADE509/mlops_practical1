@@ -44,3 +44,4 @@ with open("metrics.json","w") as f:
     json.dump(metrics,f,indent=4)
 print("training Completed Successfully")
 print("Training Started...")
+print("telecom support model version 1.0")
